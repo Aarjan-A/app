@@ -324,6 +324,111 @@ async def accept_task(task_id: str, token: str):
     return {"success": True}
 
 # ============= PAYMENT ROUTES =============
+class PaymentRequest(BaseModel):
+    amount: float
+    recipient_email: Optional[str] = None
+
+@api_router.post("/payments/add-funds")
+async def add_funds(payment: PaymentRequest, token: str):
+    user_id = await get_current_user(token)
+    
+    # Update user wallet balance
+    result = await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {"wallet_balance": payment.amount}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Create transaction record
+    transaction = Transaction(
+        task_id="add_funds",
+        from_user=user_id,
+        amount=payment.amount,
+        status='completed'
+    )
+    
+    trans_dict = transaction.model_dump()
+    trans_dict['created_at'] = trans_dict['created_at'].isoformat()
+    await db.transactions.insert_one(trans_dict)
+    
+    return {"success": True, "message": "Funds added successfully"}
+
+@api_router.post("/payments/withdraw")
+async def withdraw_funds(payment: PaymentRequest, token: str):
+    user_id = await get_current_user(token)
+    
+    # Check balance
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or user.get('wallet_balance', 0) < payment.amount:
+        raise HTTPException(status_code=400, detail="Insufficient balance")
+    
+    # Update user wallet balance
+    result = await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {"wallet_balance": -payment.amount}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Create transaction record
+    transaction = Transaction(
+        task_id="withdraw",
+        from_user=user_id,
+        amount=payment.amount,
+        status='completed'
+    )
+    
+    trans_dict = transaction.model_dump()
+    trans_dict['created_at'] = trans_dict['created_at'].isoformat()
+    await db.transactions.insert_one(trans_dict)
+    
+    return {"success": True, "message": "Withdrawal initiated successfully"}
+
+@api_router.post("/payments/send")
+async def send_money(payment: PaymentRequest, token: str):
+    user_id = await get_current_user(token)
+    
+    if not payment.recipient_email:
+        raise HTTPException(status_code=400, detail="Recipient email required")
+    
+    # Check balance
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user or user.get('wallet_balance', 0) < payment.amount:
+        raise HTTPException(status_code=400, detail="Insufficient balance")
+    
+    # Find recipient
+    recipient = await db.users.find_one({"email": payment.recipient_email}, {"_id": 0})
+    if not recipient:
+        raise HTTPException(status_code=404, detail="Recipient not found")
+    
+    # Transfer funds
+    await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {"wallet_balance": -payment.amount}}
+    )
+    await db.users.update_one(
+        {"id": recipient['id']},
+        {"$inc": {"wallet_balance": payment.amount}}
+    )
+    
+    # Create transaction record
+    transaction = Transaction(
+        task_id="send_money",
+        from_user=user_id,
+        to_user=recipient['id'],
+        amount=payment.amount,
+        status='completed'
+    )
+    
+    trans_dict = transaction.model_dump()
+    trans_dict['created_at'] = trans_dict['created_at'].isoformat()
+    await db.transactions.insert_one(trans_dict)
+    
+    return {"success": True, "message": "Money sent successfully"}
+
 @api_router.post("/payments/escrow")
 async def create_escrow(task_id: str, amount: float, token: str):
     user_id = await get_current_user(token)
