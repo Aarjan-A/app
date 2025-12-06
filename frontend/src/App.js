@@ -1,52 +1,115 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+import { useEffect, useState } from 'react';
+import '@/App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from '@/components/ui/sonner';
+import Splash from '@/pages/Splash';
+import Auth from '@/pages/Auth';
+import Home from '@/pages/Home';
+import AddTask from '@/pages/AddTask';
+import TaskDetails from '@/pages/TaskDetails';
+import HelperMarketplace from '@/pages/HelperMarketplace';
+import Wallet from '@/pages/Wallet';
+import Automations from '@/pages/Automations';
+import Notifications from '@/pages/Notifications';
+import Settings from '@/pages/Settings';
+import Disputes from '@/pages/Disputes';
+import KYC from '@/pages/KYC';
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('doerly_token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+    setTimeout(() => setShowSplash(false), 2500);
+  }, []);
+
+  if (showSplash) {
+    return <Splash />;
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route
+            path="/auth"
+            element={<Auth setIsAuthenticated={setIsAuthenticated} />}
+          />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Home /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/add-task"
+            element={
+              isAuthenticated ? <AddTask /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/task/:taskId"
+            element={
+              isAuthenticated ? <TaskDetails /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/helpers"
+            element={
+              isAuthenticated ? (
+                <HelperMarketplace />
+              ) : (
+                <Navigate to="/auth" replace />
+              )
+            }
+          />
+          <Route
+            path="/wallet"
+            element={
+              isAuthenticated ? <Wallet /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/automations"
+            element={
+              isAuthenticated ? <Automations /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              isAuthenticated ? (
+                <Notifications />
+              ) : (
+                <Navigate to="/auth" replace />
+              )
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              isAuthenticated ? <Settings /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/disputes"
+            element={
+              isAuthenticated ? <Disputes /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/kyc"
+            element={
+              isAuthenticated ? <KYC /> : <Navigate to="/auth" replace />
+            }
+          />
         </Routes>
       </BrowserRouter>
+      <Toaster position="top-center" />
     </div>
   );
 }
