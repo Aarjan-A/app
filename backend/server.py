@@ -192,6 +192,19 @@ async def get_wallet(token: str):
         raise HTTPException(status_code=404, detail="User not found")
     return {"balance": user.get('wallet_balance', 0.0)}
 
+@api_router.delete("/users/account")
+async def delete_account(token: str):
+    user_id = await get_current_user(token)
+    
+    # Delete user data
+    await db.users.delete_one({"id": user_id})
+    await db.tasks.delete_many({"created_by": user_id})
+    await db.automations.delete_many({"user_id": user_id})
+    await db.notifications.delete_many({"user_id": user_id})
+    await db.transactions.delete_many({"from_user": user_id})
+    
+    return {"success": True, "message": "Account deleted successfully"}
+
 # ============= TASK ROUTES =============
 @api_router.post("/tasks", response_model=Task)
 async def create_task(task_data: TaskCreate, token: str):
