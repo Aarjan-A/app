@@ -134,6 +134,11 @@ async def get_current_user(token: str) -> str:
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+# ============= ROOT ROUTE =============
+@api_router.get("/")
+async def root():
+    return {"message": "Doerly API is running", "status": "healthy"}
+
 # ============= AUTH ROUTES =============
 @api_router.post("/auth/register")
 async def register(user_data: UserRegister):
