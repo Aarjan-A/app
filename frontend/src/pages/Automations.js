@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { api } from '@/utils/api';
-import { ArrowLeft, Zap, Plus, Calendar } from 'lucide-react';
+import { ArrowLeft, Zap, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import BottomNav from '@/components/BottomNav';
 
 export default function Automations() {
   const navigate = useNavigate();
@@ -45,26 +46,30 @@ export default function Automations() {
     }
   };
 
+  const handleCreateAutomation = (type) => {
+    toast.info(`Creating ${type} automation - Coming soon!`);
+  };
+
   const automationTypes = [
-    { type: 'auto_bill_pay', name: 'Auto Bill Pay', icon: '💵' },
-    { type: 'subscription_renewal', name: 'Subscription Renewal', icon: '🔄' },
-    { type: 'sim_topup', name: 'SIM Top-up', icon: '📱' },
-    { type: 'grocery_restock', name: 'Grocery Restock', icon: '🛒' },
-    { type: 'medicine_refill', name: 'Medicine Refill', icon: '💊' },
-    { type: 'govt_renewals', name: 'Govt Renewals', icon: '📄' },
+    { type: 'auto_bill_pay', name: 'Auto Bill Pay', icon: '💵', description: 'Automatically pay recurring bills' },
+    { type: 'subscription_renewal', name: 'Subscription Renewal', icon: '🔄', description: 'Never miss a subscription renewal' },
+    { type: 'sim_topup', name: 'SIM Top-up', icon: '📱', description: 'Auto-recharge mobile balance' },
+    { type: 'grocery_restock', name: 'Grocery Restock', icon: '🛍', description: 'Schedule recurring grocery orders' },
+    { type: 'medicine_refill', name: 'Medicine Refill', icon: '💊', description: 'Automatic medicine refills' },
+    { type: 'govt_renewals', name: 'Govt Renewals', icon: '📄', description: 'Track government document renewals' },
   ];
 
   return (
-    <div data-testid="automations-page" className="min-h-screen bg-[#020617]">
+    <div data-testid="automations-page" className="min-h-screen bg-gradient-to-br from-[#0A0E27] via-[#1C1F3A] to-[#0A0E27] pb-24">
       {/* Header */}
-      <div className="glass border-b border-white/5 sticky top-0 z-50">
+      <div className="glass border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/')}
             data-testid="back-button"
-            className="text-slate-400 hover:text-white"
+            className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -72,7 +77,7 @@ export default function Automations() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="mb-8">
           <h2 className="font-heading font-light text-4xl text-white mb-2">Task Automations</h2>
           <p className="text-slate-400 text-lg">Set it and forget it</p>
@@ -83,17 +88,19 @@ export default function Automations() {
           <h3 className="font-heading text-2xl text-white mb-6">Available Automations</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {automationTypes.map((auto) => (
-              <div
+              <button
                 key={auto.type}
+                onClick={() => handleCreateAutomation(auto.type)}
                 data-testid={`automation-type-${auto.type}`}
-                className="bg-slate-950/50 rounded-2xl p-6 border border-white/5 hover:border-blue-500/30 transition-all cursor-pointer"
+                className="bg-slate-950/50 rounded-2xl p-6 border border-white/5 hover:border-blue-500/30 hover:bg-slate-900/50 transition-all cursor-pointer text-left group"
               >
-                <div className="flex items-start justify-between mb-2">
-                  <span className="text-3xl">{auto.icon}</span>
-                  <Zap className="w-5 h-5 text-blue-400" />
+                <div className="flex items-start justify-between mb-3">
+                  <span className="text-4xl">{auto.icon}</span>
+                  <Zap className="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <h4 className="text-white font-medium">{auto.name}</h4>
-              </div>
+                <h4 className="text-white font-medium text-lg mb-1">{auto.name}</h4>
+                <p className="text-slate-400 text-sm">{auto.description}</p>
+              </button>
             ))}
           </div>
         </div>
@@ -102,26 +109,35 @@ export default function Automations() {
         <div className="glass-card">
           <h3 className="font-heading text-2xl text-white mb-6">Your Automations</h3>
           
-          {automations.length === 0 ? (
+          {loading ? (
             <div className="text-center py-8">
+              <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-slate-400">Loading automations...</p>
+            </div>
+          ) : automations.length === 0 ? (
+            <div className="text-center py-12">
               <Zap className="w-16 h-16 text-blue-500 mx-auto mb-4 opacity-50" />
               <p className="text-slate-400 mb-4">No automations set up yet</p>
-              <Button className="btn-primary" data-testid="create-automation-button">
+              <Button 
+                onClick={() => toast.info('Create automation - Coming soon!')}
+                className="btn-primary" 
+                data-testid="create-automation-button"
+              >
                 <Plus className="w-5 h-5 mr-2" />
                 Create Automation
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {automations.map((automation) => (
                 <div
                   key={automation.id}
                   data-testid={`automation-${automation.id}`}
-                  className="flex items-center justify-between p-4 bg-slate-950/50 rounded-2xl border border-white/5"
+                  className="flex items-center justify-between p-4 bg-slate-950/50 rounded-2xl border border-white/5 hover:border-white/10 transition-all"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                      <Zap className="w-5 h-5 text-blue-400" />
+                    <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                      <Zap className="w-6 h-6 text-blue-400" />
                     </div>
                     <div>
                       <p className="text-white font-medium">{automation.automation_type}</p>
@@ -141,6 +157,8 @@ export default function Automations() {
           )}
         </div>
       </div>
+
+      <BottomNav />
     </div>
   );
 }
