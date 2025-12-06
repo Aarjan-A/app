@@ -302,6 +302,36 @@ async def extract_task(text: str, token: str):
     except Exception as e:
         return {"error": str(e)}
 
+@api_router.post("/ai/analyze-document")
+async def analyze_document(file: UploadFile = File(...), token: str = Form(...)):
+    await get_current_user(token)
+    
+    try:
+        document_data = await file.read()
+        
+        # For text files, extract directly
+        if file.content_type == 'text/plain':
+            text = document_data.decode('utf-8')
+            return {"extracted_text": text[:1000]}  # Limit to 1000 chars
+        
+        # For other documents, use AI to extract
+        base64_doc = base64.b64encode(document_data).decode('utf-8')
+        
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY,
+            session_id=str(uuid.uuid4()),
+            system_message="You extract text and actionable items from documents."
+        ).with_model("openai", "gpt-4o")
+        
+        message = UserMessage(
+            text="Extract all text and actionable items from this document."
+        )
+        
+        response = await chat.send_message(message)
+        return {"extracted_text": response}
+    except Exception as e:
+        return {"error": str(e), "extracted_text": ""}
+
 # ============= HELPER ROUTES =============
 @api_router.get("/helpers")
 async def get_helpers(token: str):
