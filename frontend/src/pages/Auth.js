@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { api, setAuthToken } from '@/utils/api';
-import { Zap } from 'lucide-react';
 
 export default function Auth({ setIsAuthenticated }) {
   const navigate = useNavigate();
@@ -64,21 +63,27 @@ export default function Auth({ setIsAuthenticated }) {
   return (
     <div
       data-testid="auth-page"
-      className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden"
+      className="min-h-screen bg-gradient-to-br from-[#0A0E27] via-[#1C1F3A] to-[#0A0E27] flex items-center justify-center p-6 relative overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent" />
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+      </div>
       
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
           <div className="mb-4 flex justify-center">
-            <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.4)]">
-              <Zap className="w-8 h-8 text-white" />
+            <div className="relative w-20 h-20">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-[24px] shadow-[0_0_40px_rgba(59,130,246,0.5)]" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="font-heading font-bold text-5xl text-white">D</div>
+              </div>
             </div>
           </div>
           <h1 className="font-heading font-light text-5xl tracking-tight text-white mb-2">
             Doerly
           </h1>
-          <p className="font-body text-base text-slate-400">Your AI-Powered Task Engine</p>
+          <p className="font-body text-base text-slate-300">Your AI-Powered Task Engine</p>
         </div>
 
         <div className="glass-card">
@@ -99,7 +104,7 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="you@example.com"
                     required
                     data-testid="login-email-input"
-                    className="bg-slate-950/50 border-white/10 text-white"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
                   />
                 </div>
                 <div>
@@ -111,7 +116,7 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="••••••••"
                     required
                     data-testid="login-password-input"
-                    className="bg-slate-950/50 border-white/10 text-white"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
                   />
                 </div>
                 <Button
@@ -132,10 +137,10 @@ export default function Auth({ setIsAuthenticated }) {
                   <Input
                     id="register-name"
                     name="full_name"
-                    placeholder="John Doe"
+                    placeholder="Enter your full name"
                     required
                     data-testid="register-name-input"
-                    className="bg-slate-950/50 border-white/10 text-white"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
                   />
                 </div>
                 <div>
@@ -147,7 +152,7 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="you@example.com"
                     required
                     data-testid="register-email-input"
-                    className="bg-slate-950/50 border-white/10 text-white"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
                   />
                 </div>
                 <div>
@@ -159,21 +164,28 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="••••••••"
                     required
                     data-testid="register-password-input"
-                    className="bg-slate-950/50 border-white/10 text-white"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
                   />
                 </div>
                 <div>
                   <Label htmlFor="user-type" className="text-slate-300">Account Type</Label>
-                  <select
-                    id="user-type"
-                    name="user_type"
-                    required
-                    data-testid="register-user-type-select"
-                    className="w-full bg-slate-950/50 border border-white/10 rounded-xl h-12 px-4 text-white"
-                  >
-                    <option value="user">User (Need help)</option>
-                    <option value="helper">Helper (Provide help)</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      id="user-type"
+                      name="user_type"
+                      required
+                      data-testid="register-user-type-select"
+                      className="w-full bg-slate-950/30 backdrop-blur-xl border border-white/20 rounded-2xl h-14 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    >
+                      <option value="user" className="bg-slate-900">User (Need help)</option>
+                      <option value="helper" className="bg-slate-900">Helper (Provide help)</option>
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
                 <Button
                   type="submit"
