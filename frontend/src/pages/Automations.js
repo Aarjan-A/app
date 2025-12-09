@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { api } from '@/utils/api';
 import { ArrowLeft, Zap, Plus } from 'lucide-react';
 import { toast } from 'sonner';
@@ -11,6 +14,9 @@ export default function Automations() {
   const navigate = useNavigate();
   const [automations, setAutomations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedType, setSelectedType] = useState(null);
+  const [schedule, setSchedule] = useState('daily');
   const token = localStorage.getItem('doerly_token');
 
   useEffect(() => {
@@ -40,14 +46,56 @@ export default function Automations() {
           auto.id === autoId ? { ...auto, active: !currentStatus } : auto
         )
       );
-      toast.success('Automation updated');
+      toast.success(`Automation ${!currentStatus ? 'enabled' : 'disabled'}`);
     } catch (error) {
       toast.error('Failed to update automation');
     }
   };
 
   const handleCreateAutomation = (type) => {
-    toast.info(`Creating ${type} automation - Coming soon!`);
+    setSelectedType(type);
+    setShowCreateDialog(true);
+  };
+
+  const handleSubmitAutomation = async () => {
+    if (!selectedType || !schedule) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    try {
+      const response = await api.post(
+        '/automations',
+        {},
+        {
+          params: { 
+            token,
+            automation_type: selectedType.type,
+            schedule: schedule
+          },
+        }
+      );
+      
+      setAutomations([...automations, response.data]);
+      toast.success(`${selectedType.name} automation created!`);
+      setShowCreateDialog(false);
+      setSelectedType(null);
+      setSchedule('daily');
+    } catch (error) {
+      toast.error('Failed to create automation');
+    }
+  };
+
+  const deleteAutomation = async (autoId) => {
+    try {
+      await api.delete(`/automations/${autoId}`, {
+        params: { token },
+      });
+      setAutomations(automations.filter((auto) => auto.id !== autoId));
+      toast.success('Automation deleted');
+    } catch (error) {
+      toast.error('Failed to delete automation');
+    }
   };
 
   const automationTypes = [
