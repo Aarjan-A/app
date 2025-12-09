@@ -11,7 +11,7 @@ from datetime import datetime
 import sys
 
 # Get backend URL from frontend .env
-BACKEND_URL = "https://taskhub-revamp.preview.emergentagent.com/api"
+BACKEND_URL = "https://dclean-interface.preview.emergentagent.com/api"
 
 class DoerlyAPITester:
     def __init__(self):
