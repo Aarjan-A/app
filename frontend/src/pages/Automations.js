@@ -166,14 +166,7 @@ export default function Automations() {
             <div className="text-center py-12">
               <Zap className="w-16 h-16 text-blue-500 mx-auto mb-4 opacity-50" />
               <p className="text-slate-400 mb-4">No automations set up yet</p>
-              <Button 
-                onClick={() => toast.info('Create automation - Coming soon!')}
-                className="btn-primary" 
-                data-testid="create-automation-button"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Create Automation
-              </Button>
+              <p className="text-slate-500 text-sm mb-6">Create your first automation above</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -183,28 +176,96 @@ export default function Automations() {
                   data-testid={`automation-${automation.id}`}
                   className="flex items-center justify-between p-4 bg-slate-950/50 rounded-2xl border border-white/5 hover:border-white/10 transition-all"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 flex-1">
                     <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
                       <Zap className="w-6 h-6 text-blue-400" />
                     </div>
-                    <div>
-                      <p className="text-white font-medium">{automation.automation_type}</p>
-                      <p className="text-slate-400 text-sm">{automation.schedule}</p>
+                    <div className="flex-1">
+                      <p className="text-white font-medium capitalize">{automation.automation_type.replace(/_/g, ' ')}</p>
+                      <p className="text-slate-400 text-sm capitalize">{automation.schedule}</p>
                     </div>
                   </div>
-                  <Switch
-                    checked={automation.active}
-                    onCheckedChange={() =>
-                      toggleAutomation(automation.id, automation.active)
-                    }
-                    data-testid={`toggle-automation-${automation.id}`}
-                  />
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={automation.active}
+                      onCheckedChange={() =>
+                        toggleAutomation(automation.id, automation.active)
+                      }
+                      data-testid={`toggle-automation-${automation.id}`}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteAutomation(automation.id)}
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+
+      {/* Create Automation Dialog */}
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="bg-slate-900 border border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white">
+              {selectedType ? `Create ${selectedType.name}` : 'Create Automation'}
+            </DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Set up your automation schedule
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6 mt-4">
+            {selectedType && (
+              <div className="glass-card border-blue-500/30">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-3xl">{selectedType.icon}</span>
+                  <h4 className="text-white font-medium">{selectedType.name}</h4>
+                </div>
+                <p className="text-slate-400 text-sm">{selectedType.description}</p>
+              </div>
+            )}
+            
+            <div>
+              <Label htmlFor="schedule" className="text-slate-300 text-base">Schedule</Label>
+              <select
+                id="schedule"
+                value={schedule}
+                onChange={(e) => setSchedule(e.target.value)}
+                className="w-full bg-slate-950/50 border border-white/10 rounded-2xl h-14 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all"
+              >
+                <option value="daily" className="bg-slate-900">Daily</option>
+                <option value="weekly" className="bg-slate-900">Weekly</option>
+                <option value="monthly" className="bg-slate-900">Monthly</option>
+                <option value="on_due_date" className="bg-slate-900">On Due Date</option>
+              </select>
+            </div>
+
+            <div className="flex gap-3">
+              <Button 
+                onClick={() => {
+                  setShowCreateDialog(false);
+                  setSelectedType(null);
+                }}
+                className="flex-1 btn-secondary"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSubmitAutomation}
+                className="flex-1 btn-primary"
+              >
+                Create Automation
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <BottomNav />
     </div>
