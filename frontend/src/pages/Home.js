@@ -61,9 +61,12 @@ export default function Home() {
             {/* Logo */}
             <div className="flex items-center gap-3">
               <div className="relative w-10 h-10">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.4)]" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-600/30 rounded-xl blur-sm" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-xl shadow-[0_4px_16px_rgba(59,130,246,0.4)]">
+                  <div className="absolute inset-[1px] bg-gradient-to-br from-white/10 to-transparent rounded-[10px]" />
+                </div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="font-heading font-bold text-2xl text-white">D</div>
+                  <div className="font-heading font-bold text-2xl text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">D</div>
                 </div>
               </div>
               <h1 className="font-heading font-light text-2xl text-white">Doerly</h1>
