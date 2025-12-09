@@ -532,6 +532,16 @@ async def toggle_automation(auto_id: str, token: str):
     
     return {"active": new_status}
 
+@api_router.delete("/automations/{auto_id}")
+async def delete_automation(auto_id: str, token: str):
+    user_id = await get_current_user(token)
+    
+    result = await db.automations.delete_one({"id": auto_id, "user_id": user_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Automation not found")
+    
+    return {"success": True}
+
 # ============= NOTIFICATION ROUTES =============
 @api_router.get("/notifications")
 async def get_notifications(token: str):
