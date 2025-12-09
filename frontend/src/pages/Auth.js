@@ -74,9 +74,12 @@ export default function Auth({ setIsAuthenticated }) {
         <div className="text-center mb-8">
           <div className="mb-4 flex justify-center">
             <div className="relative w-20 h-20">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-[24px] shadow-[0_0_40px_rgba(59,130,246,0.5)]" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-600/30 rounded-[22px] blur-lg" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-[22px] shadow-[0_6px_24px_rgba(59,130,246,0.4)]">
+                <div className="absolute inset-[1.5px] bg-gradient-to-br from-white/10 to-transparent rounded-[20px]" />
+              </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="font-heading font-bold text-5xl text-white">D</div>
+                <div className="font-heading font-bold text-5xl text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)]">D</div>
               </div>
             </div>
           </div>
