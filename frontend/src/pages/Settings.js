@@ -64,10 +64,10 @@ export default function Settings() {
     {
       title: 'Account',
       items: [
-        { icon: User, label: 'Profile Settings', description: 'Manage your personal information', action: () => toast.info('Profile settings - Coming soon!') },
+        { icon: User, label: 'Profile Settings', description: 'Manage your personal information', action: () => navigate('/profile-settings') },
         { icon: Mail, label: 'Email Preferences', description: 'Manage email notifications', action: () => toast.info('Email preferences - Coming soon!') },
-        { icon: Shield, label: 'Security', description: 'Password and authentication', action: () => toast.info('Security settings - Coming soon!') },
-        { icon: Lock, label: 'Privacy', description: 'Control your data and privacy', action: () => toast.info('Privacy settings - Coming soon!') },
+        { icon: Shield, label: 'Security', description: 'Password and authentication', action: () => navigate('/security-settings') },
+        { icon: Lock, label: 'Privacy', description: 'Control your data and privacy', action: () => navigate('/privacy-policy') },
       ]
     },
     {
@@ -89,17 +89,17 @@ export default function Settings() {
       title: 'Financial',
       items: [
         { icon: CreditCard, label: 'Payment Methods', description: 'Manage cards and bank accounts', action: () => toast.info('Payment methods - Coming soon!') },
-        { icon: BarChart3, label: 'Insights & Analytics', description: 'View your spending and task stats', action: () => toast.info('Insights - Coming soon!') },
+        { icon: BarChart3, label: 'Insights & Analytics', description: 'View your spending and task stats', action: () => navigate('/insights') },
         { icon: Database, label: 'Billing History', description: 'View all transactions', action: () => navigate('/wallet') },
       ]
     },
     {
       title: 'Support & Legal',
       items: [
-        { icon: HelpCircle, label: 'Help & Support', description: 'Get help with Doerly', action: () => toast.info('Opening support center...') },
-        { icon: FileText, label: 'Privacy Policy', description: 'Read our privacy policy', action: () => toast.info('Opening privacy policy...') },
-        { icon: FileText, label: 'Terms of Service', description: 'Read our terms', action: () => toast.info('Opening terms of service...') },
-        { icon: Info, label: 'About Doerly', description: 'Version 1.0.0', action: () => toast.info('Doerly - Life Tasks, Done For You') },
+        { icon: HelpCircle, label: 'Help & Support', description: 'Get help with Doerly', action: () => navigate('/help-support') },
+        { icon: FileText, label: 'Privacy Policy', description: 'Read our privacy policy', action: () => navigate('/privacy-policy') },
+        { icon: FileText, label: 'Terms of Service', description: 'Read our terms', action: () => navigate('/terms-of-service') },
+        { icon: Info, label: 'About Doerly', description: 'Version 1.0.0', action: () => navigate('/about') },
       ]
     },
     {
