@@ -114,6 +114,48 @@ function App() {
               isAuthenticated ? <KYC /> : <Navigate to="/auth" replace />
             }
           />
+          <Route
+            path="/privacy-policy"
+            element={
+              isAuthenticated ? <PrivacyPolicy /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/terms-of-service"
+            element={
+              isAuthenticated ? <TermsOfService /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/profile-settings"
+            element={
+              isAuthenticated ? <ProfileSettings /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/security-settings"
+            element={
+              isAuthenticated ? <SecuritySettings /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/insights"
+            element={
+              isAuthenticated ? <Insights /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/help-support"
+            element={
+              isAuthenticated ? <HelpSupport /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              isAuthenticated ? <AboutDoerly /> : <Navigate to="/auth" replace />
+            }
+          />
         </Routes>
       </BrowserRouter>
       <Toaster position="top-center" />
