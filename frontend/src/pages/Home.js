@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { api } from '@/utils/api';
-import { Clock, CheckCircle, AlertCircle, Bell, Settings as SettingsIcon, Wallet as WalletIcon } from 'lucide-react';
+import { Clock, CheckCircle, AlertCircle, BellDot, Settings as SettingsIcon, CreditCard } from 'lucide-react';
 import { toast } from 'sonner';
 import BottomNav from '@/components/BottomNav';
 
