@@ -79,9 +79,9 @@ export default function Home() {
                 size="icon"
                 onClick={() => navigate('/notifications')}
                 data-testid="notifications-button"
-                className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+                className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl transition-all relative"
               >
-                <Bell className="w-5 h-5" />
+                <BellDot className="w-5 h-5" />
               </Button>
               <Button
                 variant="ghost"
@@ -90,7 +90,7 @@ export default function Home() {
                 data-testid="wallet-button"
                 className="text-slate-300 hover:text-white hover:bg-white/10 rounded-xl transition-all"
               >
-                <WalletIcon className="w-5 h-5" />
+                <CreditCard className="w-5 h-5" />
               </Button>
               <Button
                 variant="ghost"
