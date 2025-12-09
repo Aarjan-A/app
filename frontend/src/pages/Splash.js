@@ -12,11 +12,18 @@ export default function Splash() {
       
       <div className="relative z-10 text-center">
         <div className="mb-6 flex justify-center">
-          {/* Runna-style D logo */}
+          {/* Runna-style D logo - Clean and Aesthetic */}
           <div className="relative w-32 h-32">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-[32px] shadow-[0_0_60px_rgba(59,130,246,0.6)] animate-pulse" />
+            {/* Outer glow ring */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-600/30 rounded-[28px] blur-xl" />
+            {/* Main logo container */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-[28px] shadow-[0_8px_32px_rgba(59,130,246,0.4)]">
+              {/* Inner subtle highlight */}
+              <div className="absolute inset-[2px] bg-gradient-to-br from-white/10 to-transparent rounded-[26px]" />
+            </div>
+            {/* Letter D with refined styling */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="font-heading font-bold text-7xl text-white tracking-tight">D</div>
+              <div className="font-heading font-bold text-7xl text-white tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]" style={{ letterSpacing: '-0.02em' }}>D</div>
             </div>
           </div>
         </div>
