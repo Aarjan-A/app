@@ -14,6 +14,13 @@ import Notifications from '@/pages/Notifications';
 import Settings from '@/pages/Settings';
 import Disputes from '@/pages/Disputes';
 import KYC from '@/pages/KYC';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import TermsOfService from '@/pages/TermsOfService';
+import ProfileSettings from '@/pages/ProfileSettings';
+import SecuritySettings from '@/pages/SecuritySettings';
+import Insights from '@/pages/Insights';
+import HelpSupport from '@/pages/HelpSupport';
+import AboutDoerly from '@/pages/AboutDoerly';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
