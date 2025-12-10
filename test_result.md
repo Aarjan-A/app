@@ -103,16 +103,19 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Major UI/UX improvements for Doerly app including:
-  - Refine logo to Runna-style (clean, aesthetic)
-  - Update notification and wallet icons to modern designs
-  - Make Automations fully functional with create/delete/toggle
-  - Create all Settings sub-pages (Privacy, Terms, Profile, Security, Insights, Help, About)
-  - Ensure all settings navigate to actual pages
-  - Revolut color scheme and glassmorphism design
-  - Bottom navigation for easy access
-  - Voice recording for Add Task
-  - Document upload support
+  Comprehensive UI/UX overhaul for Doerly app including:
+  - Runna-style logo with dot above D (clean, no glow) across Splash, Auth, Home
+  - Dark navy blue background (#0F1419) - Revolut style
+  - Rounded input-like boxes for selectors (Auth account type, Task type/urgency)
+  - Capitalize greetings (Morning, Afternoon, Evening)
+  - Updated icons (Bell, Wallet, modern Settings)
+  - Home page with useful feature cards
+  - Remove voice from AddTask, add photo/video/document upload
+  - Enhanced Automations with detailed features and custom automation creation
+  - Helper Marketplace with stats, badges, search, hire flow
+  - Settings with initials avatar, Email Preferences, Profile Settings, Security
+  - White theme with dark text
+  - All pages fully functional and professional
 
 backend:
   - task: "Add DELETE automation endpoint"
