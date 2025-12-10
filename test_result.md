@@ -208,6 +208,43 @@ frontend:
     working: true
     file: "frontend/src/pages/Settings.js, App.js"
     stuck_count: 0
+
+  - task: "Helper Marketplace enhancements"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/HelperMarketplace.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Enhanced with search, stats, detailed helper cards, badges, specializations, hire flow with confirmation dialog"
+
+  - task: "Auth screen rounded selectors"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/Auth.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Account type selector boxes now have rounded corners like password inputs"
+
+  - task: "Dark navy blue background"
+    implemented: true
+    working: true
+    file: "All pages"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Changed background to #0F1419 (dark navy blue) across all pages"
+
     priority: "high"
     needs_retesting: true
     status_history:
