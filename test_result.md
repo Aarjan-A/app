@@ -179,7 +179,7 @@ frontend:
         agent: "main"
         comment: "Bell, Wallet, modern Settings icon. Capitalized greetings (Morning/Afternoon/Evening). Added useful feature cards"
 
-  - task: "Fully functional Automations page"
+  - task: "Enhanced Automations with features"
     implemented: true
     working: true
     file: "frontend/src/pages/Automations.js"
@@ -189,7 +189,7 @@ frontend:
     status_history:
       - working: true
         agent: "main"
-        comment: "Complete automation workflow: create, toggle, delete with dialog interface"
+        comment: "Complete automation workflow with detailed features, custom automation creation, status badges, last run tracking"
 
   - task: "Settings sub-pages created"
     implemented: true
