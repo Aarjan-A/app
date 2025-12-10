@@ -215,17 +215,17 @@ frontend:
         agent: "main"
         comment: "All settings items now navigate to actual pages instead of showing 'Coming soon'"
 
-  - task: "Voice recording in Add Task"
+  - task: "File upload in Add Task"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/pages/AddTask.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
-      - working: "NA"
+      - working: true
         agent: "main"
-        comment: "Web Speech API implemented - works in Chrome/Edge, not in Safari"
+        comment: "Removed voice recording. Added photo/video/document upload with file management. Rounded selector boxes"
 
 metadata:
   created_by: "main_agent"
