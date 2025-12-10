@@ -266,17 +266,20 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "2.0"
-  test_sequence: 1
+  version: "3.0"
+  test_sequence: 2
   run_ui: true
 
 test_plan:
   current_focus:
-    - "Automations full workflow"
-    - "Settings sub-pages navigation"
-    - "Insights page data display"
+    - "All UI/UX changes - logo, background, icons, greetings"
+    - "File upload functionality in AddTask"
+    - "Enhanced automations with custom creation"
+    - "Helper marketplace with search and hire flow"
+    - "Settings pages - Email Preferences, Profile, Security"
+    - "White theme switching"
   stuck_tasks: []
-  test_all: false
+  test_all: true
   test_priority: "high_first"
 
 agent_communication:
