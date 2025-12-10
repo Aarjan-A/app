@@ -191,17 +191,17 @@ frontend:
         agent: "main"
         comment: "Complete automation workflow with detailed features, custom automation creation, status badges, last run tracking"
 
-  - task: "Settings sub-pages created"
+  - task: "Settings with all sub-pages"
     implemented: true
     working: true
-    file: "frontend/src/pages/PrivacyPolicy.js, TermsOfService.js, ProfileSettings.js, SecuritySettings.js, Insights.js, HelpSupport.js, AboutDoerly.js"
+    file: "frontend/src/pages/Settings.js, EmailPreferences.js, ProfileSettings.js, SecuritySettings.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: true
         agent: "main"
-        comment: "All 7 settings sub-pages created with full content and proper navigation"
+        comment: "Settings with initials avatar, Email Preferences, Profile Settings with edit, Security with password change, white theme support"
 
   - task: "Settings navigation updated"
     implemented: true
