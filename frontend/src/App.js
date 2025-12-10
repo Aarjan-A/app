@@ -140,6 +140,12 @@ function App() {
             }
           />
           <Route
+            path="/email-preferences"
+            element={
+              isAuthenticated ? <EmailPreferences /> : <Navigate to="/auth" replace />
+            }
+          />
+          <Route
             path="/insights"
             element={
               isAuthenticated ? <Insights /> : <Navigate to="/auth" replace />
