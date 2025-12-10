@@ -18,6 +18,7 @@ import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsOfService from '@/pages/TermsOfService';
 import ProfileSettings from '@/pages/ProfileSettings';
 import SecuritySettings from '@/pages/SecuritySettings';
+import EmailPreferences from '@/pages/EmailPreferences';
 import Insights from '@/pages/Insights';
 import HelpSupport from '@/pages/HelpSupport';
 import AboutDoerly from '@/pages/AboutDoerly';
