@@ -1,19 +1,18 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/utils/api';
-import { ArrowLeft, Camera, Mic, FileText, Sparkles, Upload } from 'lucide-react';
+import { ArrowLeft, Camera, FileText, Upload, Video, X } from 'lucide-react';
 import { toast } from 'sonner';
 import BottomNav from '@/components/BottomNav';
 
 export default function AddTask() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [taskData, setTaskData] = useState({
     title: '',
     description: '',
@@ -21,7 +20,6 @@ export default function AddTask() {
     urgency: 'medium',
     estimated_cost: ''
   });
-  const recognitionRef = useRef(null);
   const token = localStorage.getItem('doerly_token');
 
   const handleSubmit = async (e) => {
@@ -44,127 +42,35 @@ export default function AddTask() {
     }
   };
 
-  const handleImageUpload = async (e) => {
+  const handleFileUpload = async (e, type) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setAiLoading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('token', token);
-
-    try {
-      const response = await api.post('/ai/analyze-image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      
-      toast.success('Image analyzed! Check the suggestion.');
-      console.log('AI Analysis:', response.data.analysis);
-    } catch (error) {
-      toast.error('Failed to analyze image');
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const handleDocumentUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setAiLoading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('token', token);
-
-    try {
-      const response = await api.post('/ai/analyze-document', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      
-      toast.success('Document analyzed!');
-      if (response.data.extracted_text) {
-        setTaskData(prev => ({
-          ...prev,
-          description: prev.description + '\n' + response.data.extracted_text
-        }));
-      }
-    } catch (error) {
-      toast.error('Failed to analyze document');
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const startVoiceRecording = () => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      toast.error('Voice recognition not supported in this browser');
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB');
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
-
-    recognition.onstart = () => {
-      setIsRecording(true);
-      toast.info('Listening... Speak now!');
+    const fileObj = {
+      id: Date.now(),
+      name: file.name,
+      type: type,
+      size: (file.size / 1024).toFixed(2) + ' KB',
+      file: file
     };
 
-    recognition.onresult = (event) => {
-      let interimTranscript = '';
-      let finalTranscript = '';
-
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript + ' ';
-        } else {
-          interimTranscript += transcript;
-        }
-      }
-
-      if (finalTranscript) {
-        setTaskData(prev => ({
-          ...prev,
-          description: prev.description + finalTranscript
-        }));
-      }
-    };
-
-    recognition.onerror = (event) => {
-      toast.error('Voice recognition error: ' + event.error);
-      setIsRecording(false);
-    };
-
-    recognition.onend = () => {
-      setIsRecording(false);
-    };
-
-    recognitionRef.current = recognition;
-    recognition.start();
+    setUploadedFiles(prev => [...prev, fileObj]);
+    toast.success(`${type} uploaded successfully`);
   };
 
-  const stopVoiceRecording = () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsRecording(false);
-      toast.success('Recording stopped');
-    }
-  };
-
-  const handleVoiceClick = () => {
-    if (isRecording) {
-      stopVoiceRecording();
-    } else {
-      startVoiceRecording();
-    }
+  const removeFile = (id) => {
+    setUploadedFiles(prev => prev.filter(f => f.id !== id));
+    toast.info('File removed');
   };
 
   return (
-    <div data-testid="add-task-page" className="min-h-screen bg-gradient-to-br from-[#0A0E27] via-[#1C1F3A] to-[#0A0E27] pb-24">
+    <div data-testid="add-task-page" className="min-h-screen bg-[#0F1419] pb-24">
       {/* Header */}
       <div className="glass border-b border-white/10 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
@@ -182,62 +88,96 @@ export default function AddTask() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 py-8">
-        {/* Quick Capture Options */}
+        {/* File Upload Options */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <label
-            htmlFor="image-upload"
+            htmlFor="photo-upload"
             className="glass-card cursor-pointer text-center py-8 hover:scale-105 transition-all group"
             data-testid="photo-capture-button"
           >
             <Camera className="w-8 h-8 text-blue-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
             <span className="text-sm text-slate-300 font-medium">Photo</span>
             <input
-              id="image-upload"
+              id="photo-upload"
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={handleImageUpload}
+              onChange={(e) => handleFileUpload(e, 'photo')}
             />
           </label>
 
-          <button
-            onClick={handleVoiceClick}
-            className={`glass-card text-center py-8 hover:scale-105 transition-all group ${
-              isRecording ? 'border-red-500/50 bg-red-500/10' : ''
-            }`}
-            data-testid="voice-capture-button"
+          <label
+            htmlFor="video-upload"
+            className="glass-card cursor-pointer text-center py-8 hover:scale-105 transition-all group"
+            data-testid="video-capture-button"
           >
-            <Mic className={`w-8 h-8 mx-auto mb-2 group-hover:scale-110 transition-transform ${
-              isRecording ? 'text-red-400 animate-pulse' : 'text-blue-400'
-            }`} />
-            <span className={`text-sm font-medium ${
-              isRecording ? 'text-red-400' : 'text-slate-300'
-            }`}>
-              {isRecording ? 'Recording...' : 'Voice'}
-            </span>
-          </button>
+            <Video className="w-8 h-8 text-purple-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+            <span className="text-sm text-slate-300 font-medium">Video</span>
+            <input
+              id="video-upload"
+              type="file"
+              accept="video/*"
+              className="hidden"
+              onChange={(e) => handleFileUpload(e, 'video')}
+            />
+          </label>
 
           <label
             htmlFor="document-upload"
             className="glass-card cursor-pointer text-center py-8 hover:scale-105 transition-all group"
             data-testid="document-capture-button"
           >
-            <FileText className="w-8 h-8 text-blue-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+            <FileText className="w-8 h-8 text-green-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
             <span className="text-sm text-slate-300 font-medium">Document</span>
             <input
               id="document-upload"
               type="file"
-              accept=".pdf,.doc,.docx,.txt"
+              accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
               className="hidden"
-              onChange={handleDocumentUpload}
+              onChange={(e) => handleFileUpload(e, 'document')}
             />
           </label>
         </div>
 
-        {aiLoading && (
-          <div className="glass-card mb-8 p-6 text-center">
-            <Sparkles className="w-8 h-8 text-blue-400 mx-auto mb-2 animate-pulse" />
-            <p className="text-slate-300">AI is analyzing your input...</p>
+        {/* Uploaded Files Display */}
+        {uploadedFiles.length > 0 && (
+          <div className="glass-card mb-8">
+            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+              <Upload className="w-5 h-5 text-blue-400" />
+              Uploaded Files ({uploadedFiles.length})
+            </h3>
+            <div className="space-y-2">
+              {uploadedFiles.map((file) => (
+                <div
+                  key={file.id}
+                  className="flex items-center justify-between p-3 bg-slate-900/50 rounded-xl border border-white/5"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                      file.type === 'photo' ? 'bg-blue-500/20' :
+                      file.type === 'video' ? 'bg-purple-500/20' :
+                      'bg-green-500/20'
+                    }`}>
+                      {file.type === 'photo' ? <Camera className="w-5 h-5 text-blue-400" /> :
+                       file.type === 'video' ? <Video className="w-5 h-5 text-purple-400" /> :
+                       <FileText className="w-5 h-5 text-green-400" />}
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">{file.name}</p>
+                      <p className="text-slate-500 text-xs">{file.size}</p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeFile(file.id)}
+                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -254,7 +194,7 @@ export default function AddTask() {
                 onChange={(e) => setTaskData({...taskData, title: e.target.value})}
                 required
                 data-testid="task-title-input"
-                className="bg-slate-950/50 border-white/10 text-white h-14 text-lg placeholder:text-slate-500"
+                className="bg-slate-950/50 border-white/10 text-white h-12 text-lg placeholder:text-slate-500 rounded-xl"
               />
             </div>
 
@@ -268,7 +208,7 @@ export default function AddTask() {
                 onChange={(e) => setTaskData({...taskData, description: e.target.value})}
                 required
                 data-testid="task-description-input"
-                className="bg-slate-950/50 border-white/10 text-white min-h-[150px] text-base placeholder:text-slate-500"
+                className="bg-slate-950/50 border-white/10 text-white min-h-[150px] text-base placeholder:text-slate-500 rounded-xl"
               />
             </div>
 
@@ -282,7 +222,7 @@ export default function AddTask() {
                   onChange={(e) => setTaskData({...taskData, task_type: e.target.value})}
                   required
                   data-testid="task-type-select"
-                  className="w-full bg-slate-950/30 backdrop-blur-xl border border-white/20 rounded-2xl h-14 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all"
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-xl h-12 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                 >
                   <option value="ai" className="bg-slate-900">AI Automation</option>
                   <option value="helper" className="bg-slate-900">Human Helper</option>
@@ -298,7 +238,7 @@ export default function AddTask() {
                   onChange={(e) => setTaskData({...taskData, urgency: e.target.value})}
                   required
                   data-testid="task-urgency-select"
-                  className="w-full bg-slate-950/30 backdrop-blur-xl border border-white/20 rounded-2xl h-14 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all"
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-xl h-12 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                 >
                   <option value="low" className="bg-slate-900">Low</option>
                   <option value="medium" className="bg-slate-900">Medium</option>
@@ -318,13 +258,13 @@ export default function AddTask() {
                 value={taskData.estimated_cost}
                 onChange={(e) => setTaskData({...taskData, estimated_cost: e.target.value})}
                 data-testid="task-cost-input"
-                className="bg-slate-950/50 border-white/10 text-white h-14 text-lg placeholder:text-slate-500"
+                className="bg-slate-950/50 border-white/10 text-white h-12 text-lg placeholder:text-slate-500 rounded-xl"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full btn-primary h-14 text-lg"
+              className="w-full btn-primary h-12 text-lg"
               disabled={loading}
               data-testid="create-task-button"
             >
