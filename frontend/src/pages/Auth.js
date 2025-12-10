@@ -23,7 +23,6 @@ export default function Auth({ setIsAuthenticated }) {
       const response = await api.post('/auth/login', { email, password });
       setAuthToken(response.data.token);
       setIsAuthenticated(true);
-      toast.success('Welcome back!');
       navigate('/');
     } catch (error) {
       toast.error('Invalid credentials');
@@ -51,7 +50,6 @@ export default function Auth({ setIsAuthenticated }) {
       });
       setAuthToken(response.data.token);
       setIsAuthenticated(true);
-      toast.success('Account created!');
       navigate('/');
     } catch (error) {
       toast.error('Registration failed');
@@ -63,30 +61,28 @@ export default function Auth({ setIsAuthenticated }) {
   return (
     <div
       data-testid="auth-page"
-      className="min-h-screen bg-gradient-to-br from-[#0A0E27] via-[#1C1F3A] to-[#0A0E27] flex items-center justify-center p-6 relative overflow-hidden"
+      className="min-h-screen bg-[#0F1419] flex items-center justify-center p-6 relative overflow-hidden"
     >
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 overflow-hidden opacity-30">
+        <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl" />
       </div>
       
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="mb-4 flex justify-center">
-            <div className="relative w-20 h-20">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-600/30 rounded-[22px] blur-lg" />
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-[22px] shadow-[0_6px_24px_rgba(59,130,246,0.4)]">
-                <div className="absolute inset-[1.5px] bg-gradient-to-br from-white/10 to-transparent rounded-[20px]" />
+          <div className="mb-6 flex justify-center">
+            {/* Runna-style logo */}
+            <div className="relative">
+              <div className="text-[80px] font-bold text-white tracking-tight" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif', lineHeight: 1 }}>
+                D
               </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="font-heading font-bold text-5xl text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)]">D</div>
-              </div>
+              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-blue-500 rounded-full" />
             </div>
           </div>
           <h1 className="font-heading font-light text-5xl tracking-tight text-white mb-2">
             Doerly
           </h1>
-          <p className="font-body text-base text-slate-300">Your AI-Powered Task Engine</p>
+          <p className="font-body text-base text-slate-400">Your AI-Powered Task Engine</p>
         </div>
 
         <div className="glass-card">
@@ -107,7 +103,7 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="you@example.com"
                     required
                     data-testid="login-email-input"
-                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500 rounded-xl h-12"
                   />
                 </div>
                 <div>
@@ -119,12 +115,12 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="••••••••"
                     required
                     data-testid="login-password-input"
-                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500 rounded-xl h-12"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full btn-primary"
+                  className="w-full btn-primary h-12"
                   disabled={loading}
                   data-testid="login-submit-button"
                 >
@@ -143,7 +139,7 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="Enter your full name"
                     required
                     data-testid="register-name-input"
-                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500 rounded-xl h-12"
                   />
                 </div>
                 <div>
@@ -155,7 +151,7 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="you@example.com"
                     required
                     data-testid="register-email-input"
-                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500 rounded-xl h-12"
                   />
                 </div>
                 <div>
@@ -167,7 +163,7 @@ export default function Auth({ setIsAuthenticated }) {
                     placeholder="••••••••"
                     required
                     data-testid="register-password-input"
-                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500"
+                    className="bg-slate-950/50 border-white/10 text-white placeholder:text-slate-500 rounded-xl h-12"
                   />
                 </div>
                 <div>
@@ -178,7 +174,7 @@ export default function Auth({ setIsAuthenticated }) {
                       name="user_type"
                       required
                       data-testid="register-user-type-select"
-                      className="w-full bg-slate-950/30 backdrop-blur-xl border border-white/20 rounded-2xl h-14 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                      className="w-full bg-slate-950/50 border border-white/10 rounded-xl h-12 px-4 text-white appearance-none cursor-pointer hover:border-blue-500/50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                     >
                       <option value="user" className="bg-slate-900">User (Need help)</option>
                       <option value="helper" className="bg-slate-900">Helper (Provide help)</option>
@@ -192,7 +188,7 @@ export default function Auth({ setIsAuthenticated }) {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full btn-primary"
+                  className="w-full btn-primary h-12"
                   disabled={loading}
                   data-testid="register-submit-button"
                 >
