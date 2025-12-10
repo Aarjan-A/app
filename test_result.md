@@ -167,17 +167,17 @@ frontend:
         agent: "main"
         comment: "Clean logo with D and dot above, no glow effects, Runna-inspired design across all pages"
 
-  - task: "Modern notification and wallet icons"
+  - task: "Updated icons and greetings"
     implemented: true
     working: true
     file: "frontend/src/pages/Home.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
-        comment: "Updated Bell to BellDot, Wallet to CreditCard for modern look"
+        comment: "Bell, Wallet, modern Settings icon. Capitalized greetings (Morning/Afternoon/Evening). Added useful feature cards"
 
   - task: "Fully functional Automations page"
     implemented: true
