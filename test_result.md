@@ -155,17 +155,17 @@ backend:
         comment: "Add funds, withdraw, send money all implemented and working"
 
 frontend:
-  - task: "Refined Runna-style logo"
+  - task: "Runna-style logo with dot above D"
     implemented: true
     working: true
     file: "frontend/src/pages/Splash.js, Auth.js, Home.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "main"
-        comment: "Logo refined with cleaner design, outer glow, inner highlights, and refined typography"
+        comment: "Clean logo with D and dot above, no glow effects, Runna-inspired design across all pages"
 
   - task: "Modern notification and wallet icons"
     implemented: true
